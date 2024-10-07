@@ -1,5 +1,6 @@
 // Step 1: Import necessary modules
 const express = require('express');
+const axios = require('axios'); // Axios to make API requests
 
 // Step 2: Initialize the Express app
 const app = express();
@@ -14,15 +15,14 @@ app.get('/', (req,res) => {
 // Step 3: Create a GET route to handle API request
 app.get('/api/randomhand', async (req, res) => {
     try {
-        const response = await fetch('https://www.deckofcardsapi.com/api/deck/wc118ugnmhei/draw/?count=2')
-            .then(response => response.json())
+        const response = await axios.get('https://www.deckofcardsapi.com/api/deck/wc118ugnmhei/draw/?count=2');
         
         console.log(response.cards)
         // Step 5: Send the data back as a response
         res.json({
             success: true,
             message: 'Random user data fetched successfully!',
-            data: response.cards
+            data:response.data
         });
     } catch (error) {
         // Step 6: Handle any errors that occur during the request
