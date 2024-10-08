@@ -1,0 +1,8 @@
+@font-face {
+    font-family: casino;
+    src: url(./fonts/Casino.ttf);
+}
+
+.title{
+    font-family: casino;
+}
