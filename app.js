@@ -34,6 +34,7 @@ app.get('/war/start', async (req, res) => {
             deckId: deckId,
             playerCards: [],
             cpuCards: [],
+            remaining: 52, // Initialize with a full deck
             roundWinner: null,
             gameWinner: null
         };
@@ -45,12 +46,19 @@ app.get('/war/start', async (req, res) => {
     }
 });
 
-// Play a round
 app.get('/war/:deckId', async (req, res) => {
     const { deckId } = req.params;
     let gameData = req.session.gameData || {};
 
     try {
+        // If remaining cards are 0, don't attempt to draw more
+        if (gameData.remaining === 0) {
+            gameData.gameWinner = determineGameWinner(gameData.playerCards.length, gameData.cpuCards.length);
+            req.session.gameData = gameData;
+            console.log("Game Over - Winner: " + gameData.gameWinner); // Logging winner
+            return res.render('war', { gameData });
+        }
+
         // Draw one card for both player and CPU
         const playerDraw = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
         const cpuDraw = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
@@ -72,17 +80,25 @@ app.get('/war/:deckId', async (req, res) => {
             gameData.roundWinner = 'Tie'; // War condition, no cards won this round
         }
 
+        // Update remaining card count
+        gameData.remaining = playerDraw.data.remaining;
+        console.log(`Remaining Cards: ${gameData.remaining}`); // Log remaining cards
+
         // Check if deck is exhausted
-        if (playerDraw.data.remaining === 0) {
+        if (gameData.remaining === 0) {
             gameData.gameWinner = determineGameWinner(gameData.playerCards.length, gameData.cpuCards.length);
+            console.log("Game Over - Final Round Completed");
         }
 
         req.session.gameData = gameData;
         res.render('war', { gameData, playerCard, cpuCard });
     } catch (error) {
+        console.log("Error during the game: ", error); // Log specific error
         res.status(500).send('Error during the game');
     }
 });
+
+
 
 // Helper function to get the numeric value of the card
 function getCardValue(value) {
@@ -99,6 +115,7 @@ function determineGameWinner(playerCardCount, cpuCardCount) {
     if (cpuCardCount > playerCardCount) return 'CPU';
     return 'Tie'; // In case of a tie in total card counts
 }
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

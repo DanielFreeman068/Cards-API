@@ -16,13 +16,24 @@
         </form>
     <% } else { %>
         <h2>Current Round</h2>
-        <p>Player Card: <%= playerCard.value %> of <%= playerCard.suit %></p>
-        <img src="<%= playerCard.image %>" alt="Player Card">
 
-        <p>CPU Card: <%= cpuCard.value %> of <%= cpuCard.suit %></p>
-        <img src="<%= cpuCard.image %>" alt="CPU Card">
+        <div>
+            <h3>Player Card</h3>
+            <p><%= playerCard.value %> of <%= playerCard.suit %></p>
+            <img src="<%= playerCard.image %>" alt="Player Card">
+        </div>
+
+        <div>
+            <h3>CPU Card</h3>
+            <p><%= cpuCard.value %> of <%= cpuCard.suit %></p>
+            <img src="<%= cpuCard.image %>" alt="CPU Card">
+        </div>
 
         <h3>Round Winner: <%= gameData.roundWinner %></h3>
+
+        <h4>Player's Cards: <%= gameData.playerCards.length %></h4>
+        <h4>CPU's Cards: <%= gameData.cpuCards.length %></h4>
+        <h4>Remaining Cards in Deck: <%= gameData.remaining %></h4>
 
         <form action="/war/<%= gameData.deckId %>" method="GET">
             <button type="submit">Next Round</button>
