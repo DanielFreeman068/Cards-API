@@ -5,7 +5,7 @@ const session = require('express-session');
 
 const app = express();
 
-app.use('/public', express.static('public'));
+app.use('/public', express.static('./public'));
 app.set('view engine', 'ejs');
 
 // Add body-parser middleware to parse form data
