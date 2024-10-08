@@ -1,8 +1,10 @@
 const express = require('express');
 const axios = require('axios');
-const bodyParser = require('body-parser'); // Add this
+const bodyParser = require('body-parser');
+const session = require('express-session');
 
 const app = express();
+
 app.use('/public', express.static('public'));
 app.set('view engine', 'ejs');
 
@@ -10,94 +12,92 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Add express-session middleware
+app.use(session({
+    secret: 'your-secret-key', // Replace with your own secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+
 app.get('/', (req, res) => {
     res.render('index');
 });
 
-
-app.get('/texas-holdem/start', async (req, res) => {
+// Start the War game
+app.get('/war/start', async (req, res) => {
     try {
-        
         const deckRes = await axios.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1');
         const deckId = deckRes.data.deck_id;
-        res.redirect(`/texas-holdem/${deckId}`);
+
+        const gameData = {
+            deckId: deckId,
+            playerCards: [],
+            cpuCards: [],
+            roundWinner: null,
+            gameWinner: null
+        };
+
+        req.session.gameData = gameData;
+        res.redirect(`/war/${deckId}`);
     } catch (error) {
         res.status(500).send('Error initializing the game');
     }
 });
 
-app.get('/texas-holdem/:deckId', async (req, res) => {
+// Play a round
+app.get('/war/:deckId', async (req, res) => {
     const { deckId } = req.params;
-    try {
-        // Draw 2 cards for each player
-        const player1Res = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`);
-        const player2Res = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`);
-
-        // Start with no community cards (pre-flop)
-        const gameData = {
-            stage: 'pre-flop',
-            player1Cards: player1Res.data.cards,
-            player2Cards: player2Res.data.cards, // hidden from player
-            communityCards: [],
-            playerMove: null,
-            cpuMove: null,
-            deckId: deckId // Pass deckId to the template
-        };
-
-        res.render('texas-holdem', { gameData });
-    } catch (error) {
-        res.status(500).send('Error dealing the cards');
-    }
-});
-
-
-app.post('/texas-holdem/:deckId/:stage', async (req, res) => {
-    const { deckId, stage } = req.params;
-    const { playerMove } = req.body;
+    let gameData = req.session.gameData || {};
 
     try {
-        let gameData = req.session.gameData || {};
-        gameData.playerMove = playerMove;
+        // Draw one card for both player and CPU
+        const playerDraw = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
+        const cpuDraw = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
 
-        // CPU Logic - basic decision making for now
-        const cpuMove = Math.random() < 0.5 ? 'check' : 'raise'; // random CPU decision
-        gameData.cpuMove = cpuMove;
+        const playerCard = playerDraw.data.cards[0];
+        const cpuCard = cpuDraw.data.cards[0];
 
-        if (stage === 'pre-flop' && playerMove !== 'fold') {
-            // Proceed to the flop stage
-            const communityRes = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=3`);
-            gameData.communityCards = communityRes.data.cards;
-            gameData.stage = 'flop';
-        } else if (stage === 'flop' && playerMove !== 'fold') {
-            // Proceed to the turn stage
-            const communityRes = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
-            gameData.communityCards.push(...communityRes.data.cards);
-            gameData.stage = 'turn';
-        } else if (stage === 'turn' && playerMove !== 'fold') {
-            // Proceed to the river stage
-            const communityRes = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
-            gameData.communityCards.push(...communityRes.data.cards);
-            gameData.stage = 'river';
-        } else if (stage === 'river' && playerMove !== 'fold') {
-            // Final showdown - determine winner (simplified for now)
-            gameData.stage = 'showdown';
-            gameData.winner = determineWinner(gameData.player1Cards, gameData.player2Cards, gameData.communityCards);
+        // Compare card values to determine the winner
+        const playerValue = getCardValue(playerCard.value);
+        const cpuValue = getCardValue(cpuCard.value);
+
+        if (playerValue > cpuValue) {
+            gameData.roundWinner = 'Player';
+            gameData.playerCards.push(playerCard, cpuCard); // Player wins the round, takes both cards
+        } else if (cpuValue > playerValue) {
+            gameData.roundWinner = 'CPU';
+            gameData.cpuCards.push(playerCard, cpuCard); // CPU wins the round, takes both cards
         } else {
-            gameData.stage = 'end';
+            gameData.roundWinner = 'Tie'; // War condition, no cards won this round
+        }
+
+        // Check if deck is exhausted
+        if (playerDraw.data.remaining === 0) {
+            gameData.gameWinner = determineGameWinner(gameData.playerCards.length, gameData.cpuCards.length);
         }
 
         req.session.gameData = gameData;
-        res.render('texas-holdem', { gameData });
+        res.render('war', { gameData, playerCard, cpuCard });
     } catch (error) {
-        console.log(error);  // Add this line to log the error
         res.status(500).send('Error during the game');
     }
 });
 
-// Helper function to determine the winner (simplified logic for now)
-function determineWinner(player1Cards, player2Cards, communityCards) {
-    // Placeholder logic, real poker hand evaluation will be more complex
-    return Math.random() < 0.5 ? 'Player 1' : 'CPU'; // random winner for now
+// Helper function to get the numeric value of the card
+function getCardValue(value) {
+    if (value === 'ACE') return 14;
+    if (value === 'KING') return 13;
+    if (value === 'QUEEN') return 12;
+    if (value === 'JACK') return 11;
+    return parseInt(value); // Return numeric value for 2-10 cards
+}
+
+// Helper function to determine the game winner based on card count
+function determineGameWinner(playerCardCount, cpuCardCount) {
+    if (playerCardCount > cpuCardCount) return 'Player';
+    if (cpuCardCount > playerCardCount) return 'CPU';
+    return 'Tie'; // In case of a tie in total card counts
 }
 
 const PORT = process.env.PORT || 5000;
