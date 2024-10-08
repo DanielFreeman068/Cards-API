@@ -1,0 +1,8 @@
+/* CSS HSL */
+:root {
+    --seasalt: hsla(220, 27%, 98%, 1);
+    --french-gray: hsla(228, 6%, 83%, 1);
+    --cadet-gray: hsla(218, 5%, 66%, 1);
+    --dim-gray: hsla(228, 3%, 39%, 1);
+    --eerie-black: hsla(228, 9%, 11%, 1);
+}
