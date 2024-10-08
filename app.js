@@ -34,7 +34,7 @@ app.get('/war/start', async (req, res) => {
             deckId: deckId,
             playerCards: [],
             cpuCards: [],
-            remaining: 52, // Initialize with a full deck
+            remaining: 52, 
             roundWinner: null,
             gameWinner: null
         };
@@ -62,6 +62,14 @@ app.get('/war/:deckId', async (req, res) => {
         // Draw one card for both player and CPU
         const playerDraw = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
         const cpuDraw = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
+
+        // Check if the deck returned any cards; handle if empty
+        if (playerDraw.data.cards.length === 0 || cpuDraw.data.cards.length === 0) {
+            gameData.gameWinner = determineGameWinner(gameData.playerCards.length, gameData.cpuCards.length);
+            req.session.gameData = gameData;
+            console.log("Game Over - No more cards to draw.");
+            return res.render('war', { gameData });
+        }
 
         const playerCard = playerDraw.data.cards[0];
         const cpuCard = cpuDraw.data.cards[0];
