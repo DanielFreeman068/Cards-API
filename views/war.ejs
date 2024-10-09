@@ -8,7 +8,6 @@
 </head>
 <body>
     <div class="game-container">
-        <!-- Top Section: Title and Round Info -->
         <div class="top-section">
             <h1>War - Card Game</h1>
             <% if (!gameData.gameWinner) { %>
@@ -16,9 +15,7 @@
             <% } %>
         </div>
 
-        <!-- Conditionally render the game content only if there is no winner -->
         <% if (!gameData.gameWinner) { %>
-            <!-- Middle Section: Card Battle Layout -->
             <div class="card-battle">
                 <!-- Player 1 on the left -->
                 <div class="player">
