@@ -1,8 +1,108 @@
+/* fonts */
 @font-face {
     font-family: casino;
     src: url(./fonts/Casino.ttf);
 }
-
+@font-face {
+    font-family: bjFont;
+    src: url(./fonts/Poppins-Regular.ttf);
+}
+/* CSS HSL */
+:root {
+    --burnt-sienna: #D87152ff;
+    --redwood: #B45D4Cff;
+    --jet: #393431ff;
+    --pearl: #F1E6C8ff;
+    --dun: #DBC6B1ff;
+    --yt: #ffffff;
+}
+/* general styling to body */
+body{
+    height: 100vh;
+    width: 100vw;
+    padding:0;
+    margin:0;
+    background-color: var(--pearl);
+}
+/* header styling */
+header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100px;
+    background-color: var(--redwood);
+    position: sticky;
+    top: 0;
+}
 .title{
     font-family: casino;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    font-size:65px;
+    text-shadow: -2px -2px 5px var(--yt);
+    color:var(--redwood)
+}
+
+.title-image {
+    position: absolute;
+    bottom:0;
+    width: 300px;
+}
+/* main content styling */
+main{
+    margin-top:3rem;
+}
+.leftContent{
+    float:left;
+    background-color: var(--dun);
+    width:45vw;
+    border-radius: 15px;
+    margin-left: 3rem;
+    height:60vh;
+    text-align: center;
+    color:var(--jet);
+    font-family: bjFont;
+}
+.leftContent h1{
+    font-size:50px;
+}
+.leftContent button{
+    width:35vw;
+    background-color: var(--redwood);
+    border-radius: 10px;
+}
+.leftContent button a{
+    color:var(--pearl);
+    text-decoration: none;
+}
+.rightContent{
+    float:right;
+    background-color: var(--dun);
+    width:45vw;
+    border-radius: 15px;
+    margin-right: 3rem;
+    height:60vh;
+    text-align: center;
+    color:var(--jet);
+    font-family: bjFont;
+}
+.rightContent h1{
+    font-size:50px;
+}
+.rightContent button{
+    width:35vw;
+    background-color: var(--redwood);
+    border-radius: 10px;
+}
+.rightContent button a{
+    color:var(--pearl);
+    text-decoration: none;
+}
+/* footer styling */
+footer{
+    height:100px;
+    width: 100%;
+    background-color: var(--redwood);
+    position: fixed;
+    bottom: 0;
 }
