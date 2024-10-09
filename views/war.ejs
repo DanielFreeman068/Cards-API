@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>War - Card Game</title>
     <link rel="stylesheet" href="/public/war.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="game-container">
+        <!-- Top Section: Title and Round Info -->
         <div class="top-section">
             <h1>War - Card Game</h1>
             <% if (!gameData.gameWinner) { %>
@@ -15,25 +17,49 @@
             <% } %>
         </div>
 
+        <!-- Middle Section: Card Battle Layout -->
         <% if (!gameData.gameWinner) { %>
             <div class="card-battle">
                 <!-- Player 1 on the left -->
                 <div class="player">
                     <h3>Player 1</h3>
-                    <p><%= playerCard.value %> of <%= playerCard.suit %></p>
-                    <img src="<%= playerCard.image %>" alt="Player Card">
+                    <div class="flip-card" id="player-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img src="<%= playerCard.image %>" alt="Player Card">
+                            </div>
+                            <div class="flip-card-back">
+                                Card Back
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- CPU on the right -->
                 <div class="cpu">
                     <h3>CPU</h3>
-                    <p><%= cpuCard.value %> of <%= cpuCard.suit %></p>
-                    <img src="<%= cpuCard.image %>" alt="CPU Card">
+                    <div class="flip-card" id="cpu-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img src="<%= cpuCard.image %>" alt="CPU Card">
+                            </div>
+                            <div class="flip-card-back">
+                                Card Back
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        <% } %>
 
-            <!-- Bottom Section: Round Results, Card Counts, and Next Round Button -->
-            <div class="bottom-section">
+        <!-- Bottom Section: Round Results, Card Counts, and Next Round Button -->
+        <div class="bottom-section">
+            <% if (gameData.gameWinner) { %>
+                <h2>Game Over! Winner: <%= gameData.gameWinner %></h2>
+                <form action="/war/start" method="GET">
+                    <button type="submit">Start a New Game</button>
+                </form>
+            <% } else { %>
                 <h3>Round Winner: <%= gameData.roundWinner %></h3>
                 <h4>Player's Cards: <%= gameData.playerCards.length %></h4>
                 <h4>CPU's Cards: <%= gameData.cpuCards.length %></h4>
@@ -41,14 +67,11 @@
                 <form action="/war/<%= gameData.deckId %>" method="GET">
                     <button type="submit">Next Round</button>
                 </form>
-            </div>
-        <% } else { %>
-            <!-- Show the game over screen with the final winner -->
-            <h2>Game Over! Winner: <%= gameData.gameWinner %></h2>
-            <form action="/war/start" method="GET">
-                <button type="submit">Start a New Game</button>
-            </form>
-        <% } %>
+            <% } %>
+        </div>
+
+        <!-- Include war.js for card movement -->
+        <script src="/public/war.js"></script>
     </div>
 </body>
 </html>
