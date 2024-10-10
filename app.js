@@ -24,6 +24,10 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
+app.get('/blackjack/start', function(req, res){
+    res.render('blackjack');
+});
+
 // Start the War game
 app.get('/war/start', async (req, res) => {
     try {
