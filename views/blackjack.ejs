@@ -5,8 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link type="text/css" rel="stylesheet" href="/public/bjStyle.css">
     <title>BlackJack</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>BlackJack API</h1>
+    <header>
+        <div>
+            <a href="/">Go Back</a>
+        </div>
+        <div class="title">
+            <h1>BLACKJACK</h1>
+        </div>
+    </header>
+    <main>
+        <div class="dealer">
+            <h2>Dealer: <span id="dealerScore"><%= gameData.dealerScore %></span></h2>
+            <div id="dealerHand">
+                <% gameData.dealerHand.forEach((card, index) => { %>
+                    <img src="<%= index === 0 || gameData.gameOver ? card.image : 'https://deckofcardsapi.com/static/img/back.png' %>" alt="<%= card.value %> of <%= card.suit %>">
+                <% }); %>
+            </div>
+        </div>
+        <div class="player">
+            <h2>Player: <span id="playerScore"><%= gameData.playerScore %></span></h2>
+            <div id="playerHand">
+                <% gameData.playerHand.forEach(card => { %>
+                    <img src="<%= card.image %>" alt="<%= card.value %> of <%= card.suit %>">
+                <% }); %>
+            </div>
+        </div>
+        <div class="actions">
+            <button id="hitButton">Hit</button>
+            <button id="standButton">Stand</button>
+        </div>
+        <div id="message"><%= gameData.message %></div>
+    </main>
+    <script src="/public/bj.js"></script>
 </body>
 </html>

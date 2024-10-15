@@ -24,8 +24,79 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.get('/blackjack/start', function(req, res){
-    res.render('blackjack');
+// Blackjack Routes
+app.get('/blackjack/start', async (req, res) => {
+    try {
+        const deckRes = await axios.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1');
+        const deckId = deckRes.data.deck_id;
+
+        const playerDraw = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`);
+        const dealerDraw = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`);
+
+        const gameData = {
+            deckId: deckId,
+            playerHand: playerDraw.data.cards,
+            dealerHand: dealerDraw.data.cards,
+            playerScore: calculateScore(playerDraw.data.cards),
+            dealerScore: calculateScore([dealerDraw.data.cards[0]]),
+            gameOver: false,
+            message: ''
+        };
+
+        req.session.gameData = gameData;
+        res.render('blackjack', { gameData });
+    } catch (error) {
+        res.status(500).send('Error initializing the game');
+    }
+});
+
+app.post('/blackjack/hit', async (req, res) => {
+    try {
+        let gameData = req.session.gameData;
+        const drawRes = await axios.get(`https://deckofcardsapi.com/api/deck/${gameData.deckId}/draw/?count=1`);
+        gameData.playerHand.push(drawRes.data.cards[0]);
+        gameData.playerScore = calculateScore(gameData.playerHand);
+
+        if (gameData.playerScore > 21) {
+            gameData.gameOver = true;
+            gameData.message = 'Player busts! Dealer wins.';
+        }
+
+        req.session.gameData = gameData;
+        res.json(gameData);
+    } catch (error) {
+        res.status(500).send('Error during hit');
+    }
+});
+
+app.post('/blackjack/stand', async (req, res) => {
+    try {
+        let gameData = req.session.gameData;
+        gameData.dealerScore = calculateScore(gameData.dealerHand);
+
+        while (gameData.dealerScore < 17) {
+            const drawRes = await axios.get(`https://deckofcardsapi.com/api/deck/${gameData.deckId}/draw/?count=1`);
+            gameData.dealerHand.push(drawRes.data.cards[0]);
+            gameData.dealerScore = calculateScore(gameData.dealerHand);
+        }
+
+        gameData.gameOver = true;
+
+        if (gameData.dealerScore > 21) {
+            gameData.message = 'Dealer busts! Player wins.';
+        } else if (gameData.dealerScore > gameData.playerScore) {
+            gameData.message = 'Dealer wins!';
+        } else if (gameData.dealerScore < gameData.playerScore) {
+            gameData.message = 'Player wins!';
+        } else {
+            gameData.message = 'It\'s a tie!';
+        }
+
+        req.session.gameData = gameData;
+        res.json(gameData);
+    } catch (error) {
+        res.status(500).send('Error during stand');
+    }
 });
 
 // Start the War game
@@ -128,6 +199,29 @@ function determineGameWinner(playerCardCount, cpuCardCount) {
     return 'Tie'; // In case of a tie in total card counts
 }
 
+// Function to calculate the score for blackjack
+function calculateScore(hand) {
+    let score = 0;
+    let aceCount = 0;
+
+    for (let card of hand) {
+        if (card.value === 'ACE') {
+            aceCount++;
+            score += 11;
+        } else if (['KING', 'QUEEN', 'JACK'].includes(card.value)) {
+            score += 10;
+        } else {
+            score += parseInt(card.value);
+        }
+    }
+
+    while (score > 21 && aceCount > 0) {
+        score -= 10;
+        aceCount--;
+    }
+
+    return score;
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
