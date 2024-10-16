@@ -1,3 +1,7 @@
+*{
+    box-sizing: border-box;
+}
+
 /* fonts */
 @font-face {
     font-family: casino;
@@ -54,10 +58,21 @@ header{
     width: 300px;
 }
 /* main content styling */
+.titles{
+    display: flex;
+    justify-content: space-evenly;
+}
 main{
     display: flex;
     justify-content: space-evenly;
     margin: 3rem auto 0 auto;
+    position: absolute;
+    width: 250px;
+    height: 60vh;
+    background: none;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
 }
 p{
     padding:20px;
@@ -87,7 +102,7 @@ p{
     border-radius: 10px;
     height:5vh;
     text-align: center;
-}
+} */
 /* footer styling */
 footer{
     position: relative;
@@ -102,66 +117,157 @@ footer{
     position: fixed;
     bottom: 0;
 }
-/* wheel styling */
-@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
-*{
-    margin:0;
-    padding:0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-.container{
+/* cards */
+.thecard{
+    margin:0 5rem;
     position: relative;
-    width:400px;
-    height:400px;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-}
-.container .spinBtn{
-    position: absolute;
-    width:60px;
-    height:60px;
-    background: 50%;
-    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 60vh;
+    border-radius: 40px;
+    transform-style: preserve-3d;
+    transition: all 0.8s ease;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: #333;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    border: 4px solid rgba(0,0,0,0.75);
-    user-select: none;
+    justify-content: space-evenly;
 }
-.container .spinBtn::before{
-    content: '';
-    position: absolute;
-    top:-20px;
-    width:20px;
-    height:30px;
-    background: #fff;
-    clip-path: polygon(50% 0%, 15% 100%, 85% 100%);
+.thecard:hover{
+    transform: rotateY(180deg);
 }
-.container .wheel{
+.thefront{
     position: absolute;
     top: 0;
-    left:0;
-    width:100%;
-    height:100;
-    background: #333;
-    border-radius: 50%;
+    left: 0;
+    width: 20vw;
+    height: 60vh;
+    border-radius: 30px;
+    backface-visibility: hidden;
     overflow: hidden;
-    box-shadow: 0 0 0 5px #333, 0 0 0 15px #fff, 0 0 0 18px #111;
+    background: var(--dun);
+    color: var(--jet);
+    display: flex;
 }
-.container .wheel .number{
-    position:absolute;
-    width:50%;
-    height: 50%;
-    background: var(--clr);
-    transform-origin: bottom right;
-    transform: rotate(calc(45deg * var(--i)));
+.thefront img{
+    width: 20vw;
+    height: 60vh;
+}
+.theback{
+    width: 20vw;
+    height: 60vh;
+    border-radius: 30px;
+    backface-visibility: hidden;
+    overflow: hidden;
+    background: var(--dun);
+    color: var(--jet);
+    text-align: center;
+    transform: rotateY(180deg);
+    display: flex;
+}
+.thefront p, .theback p{
+    font-family: 'bjfont';
+    padding: 30px;
+    font-size: 17px;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    align-content: stretch;
+}
+.war-a{
+    font-family: 'bjfont';
+    text-decoration: none;
+    background-color: #fff;
+    color: #333;
+    padding: 3%;
+    border-radius: 20px;
+    font-weight: 400px;
+    position: absolute;
+    bottom: 10%;
+    left: 33%;
+    width: 7vw;
+    height: 5vh;
+}
+.bj-a{
+    font-family: 'bjfont';
+    text-decoration: none;
+    background-color: #fff;
+    color: #333;
+    padding: 3%;
+    border-radius: 20px;
+    font-weight: 400px;
+    position: absolute;
+    bottom: 10%;
+    left: 25%;
+    width: 10vw;
+    height: 5vh;
+}
+.thecard2{
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 100vw;
+    height: 60vh;
+    border-radius: 40px;
+    transform-style: preserve-3d;
+    transition: all 0.8s ease;
+    display: flex;
+    justify-content: space-evenly;
+}
+.thecard2:hover{
+    transform: rotateY(180deg);
+}
+.thefront2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20vw;
+    height: 60vh;
+    border-radius: 30px;
+    backface-visibility: hidden;
+    overflow: hidden;
+    background: var(--dun);
+    color: var(--jet);
+    display: flex;
+}
+.thefront2 img{
+    width: 20vw;
+    height: 60vh;
+}
+.theback2{
+    width: 20vw;
+    height: 60vh;
+    border-radius: 30px;
+    backface-visibility: hidden;
+    overflow: hidden;
+    background: var(--dun);
+    color: var(--jet);
+    text-align: center;
+    transform: rotateY(180deg);
+    display: flex;
+}
+.thefront2 p, .theback2 p{
+    font-family: 'bjfont';
+    padding: 30px;
+    font-size: 17px;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    align-content: stretch;
+}
+a:visited{
+    color: #333;
+}
+.war-title{
+    margin-top: -30%;
+    font-family: 'casino';
+    color: var(--jet);
+    font-size: 400%;
+    justify-content: space-evenly;
+}
+.bj-title{
+    margin-top: -15%;
+    font-family: 'casino';
+    color: var(--jet);
+    font-size: 400%;
 }
 
 /* media styling */
