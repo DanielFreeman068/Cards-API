@@ -10,26 +10,139 @@ body {
     align-items: center;
     height: 100vh;
     overflow-x: hidden;
+    overflow-y: hidden;
+    font-family: Casino;
+
 }
 
-/* Container for the game */
+@font-face {
+    font-family: Casino;
+    src: url(./fonts/Casino.ttf);
+}
+
 .game-container {
+    position: relative; /* Added to establish positioning context */
     text-align: center;
     width: 100%;
-    visibility: hidden; /* Hide the game content until countdown is over */
+    visibility: hidden;
+    background-image: url('/public/assets/warbg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    z-index: 1; /* Base z-index */
 }
 
-/* Top section (title and round info) */
+/* Side Labels */
+.side-label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 120px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    z-index: 4; /* Ensure labels are above other elements */
+}
+
+.left-label {
+    left: 10px;
+    color: rgb(161, 247, 255);
+    animation: glow-blue 1.5s infinite alternate;
+}
+
+.right-label {
+    right: 10px;
+    color: rgb(255, 131, 131);
+    animation: glow-red 1.5s infinite alternate;
+}
+
+/* Vertical Text */
+.side-label span {
+    display: inline-block;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+}
+
+/* Glowing Effect for Player */
+@keyframes glow-blue {
+    from {
+        text-shadow: 0 0 5px blue, 0 0 10px blue, 0 0 15px blue;
+    }
+    to {
+        text-shadow: 0 0 20px blue, 0 0 30px blue, 0 0 40px blue;
+    }
+}
+
+/* Glowing Effect for CPU */
+@keyframes glow-red {
+    from {
+        text-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red;
+    }
+    to {
+        text-shadow: 0 0 20px red, 0 0 30px red, 0 0 40px red;
+    }
+}
 .top-section {
     margin-top: 20px;
 }
 
-.top-section h1, .top-section h2 {
+/* Style for the "War" text */
+.top-section h1 {
     margin: 10px 0;
-    color: #333;
+    font-size: 80px; /* Increase the font size */
+    font-weight: bold; /* Make the text bold */
+    color: orange; /* Fallback color for older browsers */
+    background: linear-gradient(90deg, orange, yellow, orange); /* Gradient background */
+    background-size: 200% 100%; /* Double the background width for animation */
+    background-clip: text;
+    -webkit-background-clip: text; /* For Safari */
+    color: transparent; /* Make text transparent to show background */
+    animation: gradientAnimation 5s linear infinite; /* Apply the animation */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Add a subtle shadow for better readability */
 }
 
-/* Flex layout for player and CPU cards in the middle */
+/* Keyframes for the gradient animation */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.top-section h2 {
+    margin: 10px 0;
+    color: #ffffff;
+    font-size: 30px;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+}
+
+.deck-counter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 5px solid #ffd700;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+}
+
+.deck-counter span {
+    font-size: 48px;
+    font-weight: bold;
+    color: #000;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+}
+
 .card-battle {
     display: flex;
     justify-content: space-between;
@@ -37,19 +150,21 @@ body {
     width: 60%;
     margin: 50px auto;
     position: relative;
+    z-index: 3; 
 }
 
-/* Card Container */
 .card-container {
     position: relative;
-    display: inline-block; /* Keep the size fitting the content */
+    display: inline-block;
+    z-index: 3; /* Cards are above the spinning image */
 }
 
-/* Larger Card Flip Container */
+
 .flip-card {
     position: relative;
     overflow: hidden;
-    transition: transform 0.5s ease-in-out; /* Add transition for smooth transformations */
+    transition: transform 0.5s ease-in-out;
+    z-index: 3; /* Ensure flip-card is above spinning image */
 }
 
 /* Initial positions using transform */
@@ -91,7 +206,7 @@ body {
 }
 
 .flip-card-back {
-    background-color: #333;
+    background: linear-gradient(90deg, orange, yellow, orange); /* Gradient background */
     color: white;
     display: flex;
     justify-content: center;
@@ -137,9 +252,9 @@ body {
     background-image: url('/public/assets/winner.png'); /* Adjust the path to your image */
     background-size: contain;
     background-repeat: no-repeat;
-    pointer-events: none; /* So it doesn't interfere with any interactions */
+    pointer-events: none;
     animation: spin 2s linear infinite;
-    z-index: -1; /* Ensure it appears behind the card */
+    z-index: 2; /* Place above background but below cards */
 }
 
 /* Keyframes for the spin animation */
@@ -198,4 +313,50 @@ button:disabled {
 #countdown-number {
     font-size: 100px; /* Adjust as needed */
     color: #333;
+}
+
+.score-rectangles {
+    position: absolute;
+    /* Remove bottom: 0; */
+    /* Add top positioning */
+    top: 90%; /* Adjust this value to move the rectangles higher */
+    width: 100%;
+    height: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Score Rectangle Base Styles */
+.score-rectangle {
+    position: absolute;
+    width: 300px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    overflow: hidden;
+    transform: translateY(170%); /* Start off-screen at the bottom */
+    transition: transform 0.5s ease-in-out;
+}
+
+/* Player's Score Rectangle */
+.player-score {
+    left: 0;
+    background-color: rgb(161, 247, 255);
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+}
+
+/* CPU's Score Rectangle */
+.cpu-score {
+    right: 0;
+    background-color: rgb(255, 131, 131);
+    clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+/* When the rectangles slide in */
+.score-rectangle.slide-in {
+    transform: translateY(0); /* Slide up into view */
 }

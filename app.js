@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 // Add express-session middleware
 app.use(session({
-    secret: 'your-secret-key', // Replace with your own secret key
+    secret: 'hehe', 
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }
@@ -99,7 +99,6 @@ app.post('/blackjack/stand', async (req, res) => {
     }
 });
 
-// Start the War game
 app.get('/war/start', async (req, res) => {
     try {
         const deckRes = await axios.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1');
@@ -122,32 +121,48 @@ app.get('/war/start', async (req, res) => {
 });
 
 app.get('/war/:deckId', async (req, res) => {
-    const { deckId } = req.params;
-    let gameData = req.session.gameData || {};
+    let gameData = req.session.gameData;
+
+    if (!gameData) {
+        return res.redirect('/war/start'); // Redirect to start if gameData is missing
+    }
+
+    const deckId = gameData.deckId;
 
     try {
+        // Store previous counts before drawing new cards
+        const previousPlayerCardCount = gameData.playerCards.length || 0;
+        const previousCpuCardCount = gameData.cpuCards.length || 0;
+
         // If remaining cards are 0, don't attempt to draw more
         if (gameData.remaining === 0) {
             gameData.gameWinner = determineGameWinner(gameData.playerCards.length, gameData.cpuCards.length);
             req.session.gameData = gameData;
-            console.log("Game Over - Winner: " + gameData.gameWinner); // Logging winner
-            return res.render('war', { gameData });
+            console.log("Game Over - Winner: " + gameData.gameWinner);
+            return res.render('war', {
+                gameData,
+                previousPlayerCardCount,
+                previousCpuCardCount
+            });
         }
 
-        // Draw one card for both player and CPU
-        const playerDraw = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
-        const cpuDraw = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
+        // Draw two cards in one request
+        const drawResponse = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`);
 
-        // Check if the deck returned any cards; handle if empty
-        if (playerDraw.data.cards.length === 0 || cpuDraw.data.cards.length === 0) {
+        // Check if the deck returned enough cards; handle if empty
+        if (drawResponse.data.cards.length < 2) {
             gameData.gameWinner = determineGameWinner(gameData.playerCards.length, gameData.cpuCards.length);
             req.session.gameData = gameData;
             console.log("Game Over - No more cards to draw.");
-            return res.render('war', { gameData });
+            return res.render('war', {
+                gameData,
+                previousPlayerCardCount,
+                previousCpuCardCount
+            });
         }
 
-        const playerCard = playerDraw.data.cards[0];
-        const cpuCard = cpuDraw.data.cards[0];
+        const playerCard = drawResponse.data.cards[0];
+        const cpuCard = drawResponse.data.cards[1];
 
         // Compare card values to determine the winner
         const playerValue = getCardValue(playerCard.value);
@@ -155,17 +170,24 @@ app.get('/war/:deckId', async (req, res) => {
 
         if (playerValue > cpuValue) {
             gameData.roundWinner = 'Player';
-            gameData.playerCards.push(playerCard, cpuCard); // Player wins the round, takes both cards
+            gameData.playerCards.push(playerCard, cpuCard); // Player wins the round
         } else if (cpuValue > playerValue) {
             gameData.roundWinner = 'CPU';
-            gameData.cpuCards.push(playerCard, cpuCard); // CPU wins the round, takes both cards
+            gameData.cpuCards.push(playerCard, cpuCard); // CPU wins the round
         } else {
-            gameData.roundWinner = 'Tie'; // War condition, no cards won this round
-        }
+            gameData.roundWinner = 'Tie';
+            console.log("Tie occurred. Initiating tie-breaker.");
+            const tiedCards = [playerCard, cpuCard]; // The initial tied cards
+            gameData = await handleTieBreaker(gameData, deckId, tiedCards);        }
 
-        // Update remaining card count
-        gameData.remaining = playerDraw.data.remaining;
-        console.log(`Remaining Cards: ${gameData.remaining}`); // Log remaining cards
+        // Decrease remaining card count by 2
+        gameData.remaining -= 2;
+        console.log(`Remaining Cards: ${gameData.remaining}`);
+
+        // Ensure remaining doesn't go negative
+        if (gameData.remaining < 0) {
+            gameData.remaining = 0;
+        }
 
         // Check if deck is exhausted
         if (gameData.remaining === 0) {
@@ -174,13 +196,72 @@ app.get('/war/:deckId', async (req, res) => {
         }
 
         req.session.gameData = gameData;
-        res.render('war', { gameData, playerCard, cpuCard });
+        res.render('war', {
+            gameData,
+            playerCard,
+            cpuCard,
+            previousPlayerCardCount,
+            previousCpuCardCount
+        });
     } catch (error) {
-        console.log("Error during the game: ", error); // Log specific error
+        console.log("Error during the game: ", error);
         res.status(500).send('Error during the game');
     }
 });
 
+async function handleTieBreaker(gameData, deckId, tiedCards) {
+    // Collect all the cards played during the tie
+    let warPile = tiedCards || [];
+
+    // Check if there are enough cards to perform the tie-breaker
+    if (gameData.remaining < 8) {
+        // Not enough cards to continue; determine winner based on current scores
+        gameData.gameWinner = determineGameWinner(gameData.playerCards.length, gameData.cpuCards.length);
+        console.log("Not enough cards for tie-breaker. Game over.");
+        return gameData;
+    }
+
+    try {
+        // Draw three face-down cards and one face-up card for each player (total of 8 cards)
+        const drawResponse = await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=8`);
+
+        // Update remaining card count
+        gameData.remaining = drawResponse.data.remaining;
+
+        // Cards drawn: first 4 are for the player, next 4 are for the CPU
+        const playerCards = drawResponse.data.cards.slice(0, 4);
+        const cpuCards = drawResponse.data.cards.slice(4, 8);
+
+        // Add the new cards to the war pile
+        warPile.push(...playerCards, ...cpuCards);
+
+        // Get the face-up cards (the fourth card for each)
+        const playerFaceUpCard = playerCards[3];
+        const cpuFaceUpCard = cpuCards[3];
+
+        // Compare face-up cards
+        const playerValue = getCardValue(playerFaceUpCard.value);
+        const cpuValue = getCardValue(cpuFaceUpCard.value);
+
+        if (playerValue > cpuValue) {
+            gameData.roundWinner = 'Player';
+            gameData.playerCards.push(...warPile);
+            console.log("Player wins the tie-breaker!");
+        } else if (cpuValue > playerValue) {
+            gameData.roundWinner = 'CPU';
+            gameData.cpuCards.push(...warPile);
+            console.log("CPU wins the tie-breaker!");
+        } else {
+            // It's a tie again; recursively call handleTieBreaker
+            console.log("Tie occurred again in tie-breaker. Continuing tie-breaker.");
+            return await handleTieBreaker(gameData, deckId, warPile);
+        }
+    } catch (error) {
+        console.log("Error during tie-breaker:", error);
+    }
+
+    return gameData;
+}
 
 
 // Helper function to get the numeric value of the card

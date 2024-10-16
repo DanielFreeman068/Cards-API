@@ -13,13 +13,22 @@
         <img src="/public/assets/3.svg" alt="3" id="countdown-image">
     </div>
 
+    <!-- Game Container -->
     <div class="game-container">
         <!-- Top Section: Title and Round Info -->
         <div class="top-section">
-            <h1>War - Card Game</h1>
+            <h1>War</h1>
             <% if (!gameData.gameWinner) { %>
                 <h2>Current Round</h2>
             <% } %>
+        </div>
+
+        <!-- Side Labels -->
+        <div class="side-label left-label">
+            <span>Player</span>
+        </div>
+        <div class="side-label right-label">
+            <span>CPU</span>
         </div>
 
         <!-- Middle Section: Card Battle Layout -->
@@ -27,7 +36,6 @@
             <div class="card-battle">
                 <!-- Player 1 on the left -->
                 <div class="player">
-                    <h3>Player 1</h3>
                     <!-- Card Container -->
                     <div class="card-container" id="player-card-container">
                         <div class="flip-card" id="player-card">
@@ -36,16 +44,16 @@
                                     <img src="<%= playerCard.image %>" alt="Player Card">
                                 </div>
                                 <div class="flip-card-back">
-                                    Card Back
+                                    WAR
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+
                 <!-- CPU on the right -->
                 <div class="cpu">
-                    <h3>CPU</h3>
                     <!-- Card Container -->
                     <div class="card-container" id="cpu-card-container">
                         <div class="flip-card" id="cpu-card">
@@ -54,12 +62,25 @@
                                     <img src="<%= cpuCard.image %>" alt="CPU Card">
                                 </div>
                                 <div class="flip-card-back">
-                                    Card Back
+                                    WAR
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Score Rectangles -->
+            <div class="score-rectangles">
+            <!-- Player's Score Rectangle -->
+            <div class="score-rectangle player-score" id="player-score-rectangle">
+                <span id="player-score-count"><%= typeof previousPlayerCardCount !== 'undefined' ? previousPlayerCardCount : 0 %></span>
+            </div>
+
+            <!-- CPU's Score Rectangle -->
+            <div class="score-rectangle cpu-score" id="cpu-score-rectangle">
+                <span id="cpu-score-count"><%= typeof previousCpuCardCount !== 'undefined' ? previousCpuCardCount : 0 %></span>
+            </div>
             </div>
         <% } %>
 
@@ -71,10 +92,7 @@
                     <button type="submit">Start a New Game</button>
                 </form>
             <% } else { %>
-                <h3>Round Winner: <%= gameData.roundWinner %></h3>
-                <h4>Player's Cards: <%= gameData.playerCards.length %></h4>
-                <h4>CPU's Cards: <%= gameData.cpuCards.length %></h4>
-                <h4>Remaining Cards in Deck: <%= gameData.remaining %></h4>
+                <!-- Removed redundant card count display -->
                 <form action="/war/<%= gameData.deckId %>" method="GET">
                     <button type="submit">Next Round</button>
                 </form>
@@ -82,9 +100,18 @@
         </div>
     </div>
 
-    <!-- Pass the round winner to JavaScript -->
+    <!-- Pass the round winner and card counts to JavaScript -->
     <script>
         var roundWinner = "<%= gameData.roundWinner %>";
+        var playerCardCount = <%= gameData.playerCards.length %>;
+        var cpuCardCount = <%= gameData.cpuCards.length %>;
+        var previousPlayerCardCount = <%= typeof previousPlayerCardCount !== 'undefined' ? previousPlayerCardCount : 0 %>;
+        var previousCpuCardCount = <%= typeof previousCpuCardCount !== 'undefined' ? previousCpuCardCount : 0 %>;
+        console.log('EJS gameData.remaining:', <%= gameData.remaining %>);
+    console.log('EJS gameData.deckId:', '<%= gameData.deckId %>');
+    console.log('EJS previousPlayerCardCount:', <%= previousPlayerCardCount %>);
+    console.log('EJS previousCpuCardCount:', <%= previousCpuCardCount %>);
+        
     </script>
     <!-- Include war.js for card movement -->
     <script src="/public/war.js"></script>

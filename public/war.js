@@ -1,3 +1,4 @@
+// Existing war.js code
 $(document).ready(function() {
     console.log("war.js is working!");
 
@@ -20,38 +21,70 @@ $(document).ready(function() {
 
             $('.game-container').css('visibility', 'visible');
 
-            // Move cards onto the screen
             $("#player-card").addClass("player-move");
             $("#cpu-card").addClass("cpu-move");
 
-            // Flip cards after 0.5 seconds
             setTimeout(function() {
                 $("#player-card").addClass("flipped");
                 $("#cpu-card").addClass("flipped");
             }, 500);
 
-            // Tilt cards and enhance the winner after flip animation
             setTimeout(function() {
-                // Tilt both cards
                 $("#player-card").addClass("tilted");
                 $("#cpu-card").addClass("tilted");
 
-                // Add winner class to the winning card
                 if (roundWinner === "Player") {
                     $("#player-card").addClass("winner");
                 } else if (roundWinner === "CPU") {
                     $("#cpu-card").addClass("winner");
                 }
-            }, 1100); // 500ms (slide in) + 600ms (flip) = 1100ms
+            }, 1100);
 
-            // Show spinning image behind the winning card after cards have tilted
             setTimeout(function() {
                 if (roundWinner === "Player") {
                     $("#player-card-container").append('<div class="spinning-image"></div>');
                 } else if (roundWinner === "CPU") {
                     $("#cpu-card-container").append('<div class="spinning-image"></div>');
                 }
-            }, 1600); // Delay to ensure previous animations have completed
+            }, 1600);
+
+            // Slide in the score rectangles after approximately 4 seconds
+            setTimeout(function() {
+                // Show the score rectangles
+                $("#player-score-rectangle").addClass("slide-in");
+                $("#cpu-score-rectangle").addClass("slide-in");
+
+                // Increment counts slowly
+                incrementScoreCounts();
+            }, 3500); // Delay to ensure previous animations have completed
+
         }
     }, 1000);
 });
+
+// Function to increment the counts
+function incrementScoreCounts() {
+    var playerCount = previousPlayerCardCount;
+    var cpuCount = previousCpuCardCount;
+    var playerFinalCount = playerCardCount;
+    var cpuFinalCount = cpuCardCount;
+
+    function incrementPlayerScore() {
+        if (playerCount !== playerFinalCount) {
+            playerCount += playerCount < playerFinalCount ? 1 : -1;
+            $("#player-score-count").text(playerCount);
+            setTimeout(incrementPlayerScore, 300); // Adjust delay as needed
+        }
+    }
+
+    function incrementCpuScore() {
+        if (cpuCount !== cpuFinalCount) {
+            cpuCount += cpuCount < cpuFinalCount ? 1 : -1;
+            $("#cpu-score-count").text(cpuCount);
+            setTimeout(incrementCpuScore, 300); // Adjust delay as needed
+        }
+    }
+
+    incrementPlayerScore();
+    incrementCpuScore();
+}
