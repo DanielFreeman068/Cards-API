@@ -37,8 +37,12 @@
             <button id="hitButton">Hit</button>
             <button id="standButton">Stand</button>
         </div>
-        <div id="message"><%= gameData.message %></div>
     </main>
+    <div class="game-over">
+        <h2>Game Over!</h2>
+        <div id="message"><%= gameData.message %></div>
+        <button id="newGameButton">New Game</button>
+    </div>
     <script src="/public/bj.js"></script>
 </body>
 </html>

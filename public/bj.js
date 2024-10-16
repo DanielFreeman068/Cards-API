@@ -11,6 +11,12 @@ $(document).ready(function() {
         });
     });
 
+    $('#newGameButton').click(function() {
+        $.get('/blackjack/start', function() {
+            location.reload();
+        });
+    });
+
     function updateGame(gameData) {
         $('#playerScore').text(gameData.playerScore);
         $('#dealerScore').text(gameData.dealerScore);
@@ -28,8 +34,11 @@ $(document).ready(function() {
 
         $('#message').text(gameData.message);
 
-        if (gameData.gameOver) {
+        if(gameData.gameOver) {
             $('#hitButton, #standButton').prop('disabled', true);
+            $('.game-over').show(); 
+        } else {
+            $('.game-over').hide(); 
         }
     }
 });
