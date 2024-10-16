@@ -78,7 +78,7 @@ body{
     transform: rotate(45deg);
     font-size:1.3em;
     font-weight: 700;
-    color: #fff;
+    color: #393431ff;
     text-shadow: 3px 5px 2px rgba(0,0,0,0.15);
 }
 .container .wheel .number span::after{
