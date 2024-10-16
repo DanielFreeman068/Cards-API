@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ... existing head content ... -->
     <title>War - Card Game</title>
     <link rel="stylesheet" href="/public/war.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+
+    <!-- Countdown Display -->
+    <div id="countdown">
+        <img src="/public/assets/3.svg" alt="3" id="countdown-image">
+    </div>
+
     <div class="game-container">
         <!-- Top Section: Title and Round Info -->
         <div class="top-section">
@@ -23,13 +28,16 @@
                 <!-- Player 1 on the left -->
                 <div class="player">
                     <h3>Player 1</h3>
-                    <div class="flip-card" id="player-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <img src="<%= playerCard.image %>" alt="Player Card">
-                            </div>
-                            <div class="flip-card-back">
-                                Card Back
+                    <!-- Card Container -->
+                    <div class="card-container" id="player-card-container">
+                        <div class="flip-card" id="player-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <img src="<%= playerCard.image %>" alt="Player Card">
+                                </div>
+                                <div class="flip-card-back">
+                                    Card Back
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -38,13 +46,16 @@
                 <!-- CPU on the right -->
                 <div class="cpu">
                     <h3>CPU</h3>
-                    <div class="flip-card" id="cpu-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <img src="<%= cpuCard.image %>" alt="CPU Card">
-                            </div>
-                            <div class="flip-card-back">
-                                Card Back
+                    <!-- Card Container -->
+                    <div class="card-container" id="cpu-card-container">
+                        <div class="flip-card" id="cpu-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <img src="<%= cpuCard.image %>" alt="CPU Card">
+                                </div>
+                                <div class="flip-card-back">
+                                    Card Back
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -69,9 +80,13 @@
                 </form>
             <% } %>
         </div>
-
-        <!-- Include war.js for card movement -->
-        <script src="/public/war.js"></script>
     </div>
+
+    <!-- Pass the round winner to JavaScript -->
+    <script>
+        var roundWinner = "<%= gameData.roundWinner %>";
+    </script>
+    <!-- Include war.js for card movement -->
+    <script src="/public/war.js"></script>
 </body>
 </html>

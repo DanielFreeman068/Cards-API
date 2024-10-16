@@ -9,12 +9,14 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 100vh;
+    overflow-x: hidden;
 }
 
 /* Container for the game */
 .game-container {
     text-align: center;
     width: 100%;
+    visibility: hidden; /* Hide the game content until countdown is over */
 }
 
 /* Top section (title and round info) */
@@ -37,42 +39,41 @@ body {
     position: relative;
 }
 
+/* Card Container */
+.card-container {
+    position: relative;
+    display: inline-block; /* Keep the size fitting the content */
+}
+
 /* Larger Card Flip Container */
 .flip-card {
-    width: 200px;  /* Increased width */
-    height: 300px; /* Increased height */
     position: relative;
     overflow: hidden;
+    transition: transform 0.5s ease-in-out; /* Add transition for smooth transformations */
 }
 
-/* Ensure both cards start offscreen */
-.player .flip-card {
-    position: relative;
-    left: -300px;  /* Off-screen to the left */
+/* Initial positions using transform */
+#player-card {
+    transform: translateX(-300%); /* Move offscreen to the left */
 }
 
-.cpu .flip-card {
-    position: relative;
-    right: -300px;  /* Off-screen to the right */
+#cpu-card {
+    transform: translateX(300%);  /* Move offscreen to the right */
 }
 
 /* Moving cards into view */
-.player-move {
-    position: relative;
-    left: 0;
-    transition: left 1s ease-in-out;
+#player-card.player-move {
+    transform: translateX(0);
 }
 
-.cpu-move {
-    position: relative;
-    right: 0;
-    transition: right 1s ease-in-out;
+#cpu-card.cpu-move {
+    transform: translateX(0);
 }
 
 /* Flip Inner for animation */
 .flip-card-inner {
-    width: 100%;
-    height: 100%;
+    width: 226px;
+    height: 314px;
     transition: transform 0.6s;
     transform-style: preserve-3d;
 }
@@ -81,10 +82,11 @@ body {
     transform: rotateY(180deg); /* Flip the card */
 }
 
+/* Flip Card Faces */
 .flip-card-front, .flip-card-back {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 226px;
+    height: 314px;
     backface-visibility: hidden;
 }
 
@@ -99,6 +101,55 @@ body {
 
 .flip-card-front {
     transform: rotateY(180deg);
+}
+
+/* Tilted Cards */
+#player-card.tilted {
+    transform: translateX(0) rotate(-3deg);
+}
+
+#cpu-card.tilted {
+    transform: translateX(0) rotate(3deg);
+}
+
+/* Winner Card */
+#player-card.winner {
+    transform: translateX(0) rotate(-3deg) scale(1.1) translateY(-10px);
+}
+
+#cpu-card.winner {
+    transform: translateX(0) rotate(3deg) scale(1.1) translateY(-10px);
+}
+
+/* Ensure transitions are smooth for the winner card */
+#player-card.winner, #cpu-card.winner {
+    transition: transform 0.5s ease-in-out;
+}
+
+/* Spinning Image Styles */
+.spinning-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;  /* Adjust size as needed */
+    height: 500px; /* Adjust size as needed */
+    background-image: url('/public/assets/winner.png'); /* Adjust the path to your image */
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none; /* So it doesn't interfere with any interactions */
+    animation: spin 2s linear infinite;
+    z-index: -1; /* Ensure it appears behind the card */
+}
+
+/* Keyframes for the spin animation */
+@keyframes spin {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
 /* Bottom section */
@@ -125,4 +176,26 @@ button:hover {
 button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+/* Countdown styles */
+#countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    text-align: center;
+}
+
+/* For image countdown */
+#countdown img {
+    width: 200px; /* Adjust size as needed */
+    height: auto;
+}
+
+/* For text countdown */
+#countdown-number {
+    font-size: 100px; /* Adjust as needed */
+    color: #333;
 }
