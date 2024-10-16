@@ -12,10 +12,8 @@
         <h1 class="title">Card Game API</h1>
         <img id="dice" class="headerImg-2" src="/public/assets/image.png" alt="cards">
     </header> 
-    <main> 
-        <div>             
+    <main>            
         <h1 class="war-title">War</h1>
-</div>  
         <div class="thecard">
             <div class="thefront"><img src="../public/assets/image-removebg-preview (3).png"></div>
             <div class="theback">
@@ -23,6 +21,7 @@
                 <a class="war-a" href="/war/start">Play War</a> 
             </div>
         </div>
+
         <h1 class="bj-title">Blackjack</h1>
         <div class="thecard2">
             <div class="thefront2"><img src="../public/assets/image-removebg-preview (3).png"></div>
@@ -32,6 +31,17 @@
             </div>
         </div>
     </main>
+    <script>
+        let wheel = document.querySelector('.wheel');
+        let spinBtn = document.querySelector('.spinBtn');
+        let value = Math.ceil(Math.random() * 3600);
+
+        spinBtn.onclick = function(){
+            wheel.style.transform = 'rotate(' + value + 'deg)';
+            value += Math.ceil(Math.random() * 3600);
+        }
+
+    </script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
