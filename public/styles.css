@@ -1,3 +1,7 @@
+*{
+    box-sizing: border-box;
+}
+
 /* fonts */
 @font-face {
     font-family: casino;
@@ -54,7 +58,7 @@ header{
     width: 300px;
 }
 /* main content styling */
-main{
+/* main{
     margin-top:3rem;
 }
 p{
@@ -93,7 +97,7 @@ p{
     border-radius: 10px;
     height:5vh;
     text-align: center;
-}
+} */
 /* footer styling */
 footer{
     position: relative;
@@ -107,6 +111,84 @@ footer{
     flex-direction: column;
     position: fixed;
     bottom: 0;
+}
+/* cards */
+main{
+    position: absolute;
+    width: 250px;
+    height: 60vh;
+    background: none;
+    top: 50%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+}
+.thecard{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 20vw;
+    height: 60vh;
+    border-radius: 40px;
+    transform-style: preserve-3d;
+    transition: all 0.8s ease;
+}
+.thecard:hover{
+    transform: rotateY(180deg);
+}
+.thefront{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    backface-visibility: hidden;
+    overflow: hidden;
+    background: var(--dun);
+    color: var(--jet);
+}
+.thefront img{
+    width: 20vw;
+    height: 60vh;
+}
+.theback{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    backface-visibility: hidden;
+    overflow: hidden;
+    background: var(--dun);
+    color: var(--jet);
+    text-align: center;
+    transform: rotateY(180deg);
+}
+.thefront p, .theback p{
+    font-family: 'bjfont';
+    padding: 30px;
+    font-weight: normal;
+    font-size: 12px;
+    text-align: center;
+}
+a{
+    font-family: 'bjfont';
+    text-decoration: none;
+    background-color: #fff;
+    color: #333;
+    padding: 3%;
+    border-radius: 20px;
+    font-weight: 400;
+}
+a:visited{
+    color: #333;
+}
+.war-title{
+    margin-top: -30%;
+    font-family: 'casino';
+    color: var(--jet);
+    font-size: 400%;
 }
 /* media styling */
 @media only screen and (max-width: 1350px) {
