@@ -9,8 +9,8 @@
 </head>
 <body>
     <header>
-        <div>
-            <a href="/">Go Back</a>
+        <div class="back">
+            <a href="/"><ion-icon name="arrow-back-outline"></ion-icon></a>
         </div>
         <div class="title">
             <h1>BLACKJACK</h1>
@@ -34,6 +34,7 @@
             </div>
         </div>
         <div class="actions">
+            <h2>Actions</h2>
             <button id="hitButton">Hit</button>
             <button id="standButton">Stand</button>
         </div>
@@ -44,5 +45,7 @@
         <button id="newGameButton">New Game</button>
     </div>
     <script src="/public/bj.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

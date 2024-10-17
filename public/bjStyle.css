@@ -6,3 +6,63 @@
     --dim-gray: hsla(228, 3%, 39%, 1);
     --eerie-black: hsla(228, 9%, 11%, 1);
 }
+
+@font-face {
+    font-family: 'bjFont';
+    src: url(./fonts/Poppins-Regular.ttf);
+}
+
+*{
+    font-family: 'bjFont';
+}
+.title{
+    position: absolute;
+    top: 5%;
+    left: 43%;
+}
+.dealer{
+    position: absolute;
+    left: 0;
+    top:20%;
+}
+.player{
+    position: absolute;
+    left: 0;
+    top: 75%;
+}
+.actions{
+    position: absolute;
+    left: 3%;
+    bottom: -50%;
+    padding-bottom: 3%;
+    border: none;
+    width: 10%;
+    height: 6%;
+    background: var(--cadet-gray);
+    display: flex;
+    align-items: center;
+}
+.actions buttons{
+    margin-top: 2%;
+}
+.back{
+    background: var(--dim-gray);
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+.back a:visited{
+    color: #fff;
+}
+.game-over{
+    position: absolute;
+    top: 12%;
+    left: 44%;
+}
+#newGameButton{
+    margin-left: 10%
+}

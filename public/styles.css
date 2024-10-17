@@ -121,8 +121,8 @@ footer{
 .thecard{
     margin:0 5rem;
     position: relative;
-    top: 0;
-    left: 0;
+    top: 10%;
+    left: -120%;
     width: 100vw;
     height: 60vh;
     border-radius: 40px;
@@ -202,8 +202,8 @@ footer{
 }
 .thecard2{
     position: relative;
-    top: 0;
-    right: 0;
+    top: 10%;
+    right: 120%;
     width: 100vw;
     height: 60vh;
     border-radius: 40px;
@@ -257,7 +257,7 @@ a:visited{
     color: #333;
 }
 .war-title{
-    margin-top: -30%;
+    margin-top: -15%;
     font-family: 'casino';
     color: var(--jet);
     font-size: 400%;
