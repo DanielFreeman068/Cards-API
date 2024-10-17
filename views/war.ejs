@@ -107,10 +107,10 @@
         var cpuCardCount = <%= gameData.cpuCards.length %>;
         var previousPlayerCardCount = <%= typeof previousPlayerCardCount !== 'undefined' ? previousPlayerCardCount : 0 %>;
         var previousCpuCardCount = <%= typeof previousCpuCardCount !== 'undefined' ? previousCpuCardCount : 0 %>;
-        console.log('EJS gameData.remaining:', <%= gameData.remaining %>);
-    console.log('EJS gameData.deckId:', '<%= gameData.deckId %>');
-    console.log('EJS previousPlayerCardCount:', <%= previousPlayerCardCount %>);
-    console.log('EJS previousCpuCardCount:', <%= previousCpuCardCount %>);
+        console.log('EJS gameData.remaining:', "<%= gameData.remaining %>");
+        console.log('EJS gameData.deckId:', '<%= gameData.deckId %>');
+        console.log('EJS previousPlayerCardCount:', "<%= previousPlayerCardCount %>");
+        console.log('EJS previousCpuCardCount:', '<%= previousCpuCardCount %>');
         
     </script>
     <!-- Include war.js for card movement -->

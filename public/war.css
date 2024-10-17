@@ -1,7 +1,7 @@
 /* General body styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background: linear-gradient(90deg, rgb(228, 32, 32), rgb(255, 149, 0), rgb(255, 123, 0)); /* Gradient background */
     margin: 0;
     padding: 0;
     display: flex;
@@ -274,10 +274,10 @@ body {
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #3a2815;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 20px 40px;
     cursor: pointer;
     font-size: 16px;
     border-radius: 5px;
@@ -285,7 +285,7 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #a07d45;
 }
 
 button:disabled {
@@ -317,8 +317,6 @@ button:disabled {
 
 .score-rectangles {
     position: absolute;
-    /* Remove bottom: 0; */
-    /* Add top positioning */
     top: 90%; /* Adjust this value to move the rectangles higher */
     width: 100%;
     height: 0;
