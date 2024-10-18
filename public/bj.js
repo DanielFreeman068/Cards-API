@@ -1,174 +1,71 @@
-// $(document).ready(function () {
-//     const newGameButton = $('#newGameButton');
-//     const hitButton = $('#hitButton');
-//     const standButton = $('#standButton');
-//     const gameOverScreen = $('.game-over');
-//     const messageElement = $('#message');
-
-//     function startNewGame() {
-//         // Reset UI elements
-//         $('#playerHand').empty();
-//         $('#dealerHand').empty();
-//         $('#playerScore').text('0');
-//         $('#dealerScore').text('0');
-//         messageElement.text('');
-//         gameOverScreen.hide();
-//         hitButton.prop('disabled', true);
-//         standButton.prop('disabled', true);
-
-//         // Fetch initial game data from the backend
-//         $.get('/blackjack/start', function (data) {
-//             console.log('Game Start Data:', JSON.stringify(data, null, 2));  // Check the data structure
-//             if (data) {
-//                 updateGame(data);
-//                 hitButton.prop('disabled', false);
-//                 standButton.prop('disabled', false);
-//             } else {
-//                 console.error('No game data received from backend');
-//             }
-//         }).fail(function (jqXHR, textStatus, errorThrown) {
-//             console.error('Failed to start the game:', textStatus, errorThrown);
-//             alert('Error: Could not start the game. Please try again.');
-//         });
-//     }
-
-//     function updateGame(gameData) {
-//         console.log('Updating game with data:', JSON.stringify(gameData, null, 2));  // Check the game data
-
-//         // Validate and display the player hand
-//         if (validateHand(gameData.playerHand)) {
-//             $('#playerHand').empty();
-//             gameData.playerHand.forEach(card => displayCard(card, '#playerHand'));
-//         } else {
-//             console.error('Invalid player hand:', gameData.playerHand);
-//         }
-
-//         // Validate and display the dealer hand
-//         if (validateHand(gameData.dealerHand)) {
-//             $('#dealerHand').empty();
-//             gameData.dealerHand.forEach((card, index) => {
-//                 const isFaceDown = !gameData.gameOver && index > 0;
-//                 displayCard(card, '#dealerHand', isFaceDown);
-//             });
-//         } else {
-//             console.error('Invalid dealer hand:', gameData.dealerHand);
-//         }
-
-//         // Update scores and message
-//         $('#playerScore').text(gameData.playerScore || '0');
-//         $('#dealerScore').text(gameData.dealerScore || '0');
-//         messageElement.text(gameData.message || '');
-
-//         // Check if the game is over
-//         if (gameData.gameOver) {
-//             hitButton.prop('disabled', true);
-//             standButton.prop('disabled', true);
-//             gameOverScreen.show();
-//         } else {
-//             gameOverScreen.hide();
-//         }
-//     }
-
-//     function validateHand(hand) {
-//         if (typeof hand === 'string') {
-//             try {
-//                 hand = JSON.parse(hand);
-//             } catch (e) {
-//                 console.error('Failed to parse hand as JSON:', e);
-//                 return false;
-//             }
-//         }
-//         return Array.isArray(hand) && hand.length > 0;
-//     }
-
-//     function displayCard(card, containerSelector, faceDown = false) {
-//         if (!card || !card.image) {
-//             console.error('Invalid card data:', card);
-//             return;
-//         }
-//         const imgSrc = faceDown 
-//             ? 'https://deckofcardsapi.com/static/img/back.png' 
-//             : card.image;
-//         const img = $(`<img src="${imgSrc}" alt="${card.value} of ${card.suit}" class="card">`);
-
-//         // Handle image loading errors
-//         img.on('error', function () {
-//             console.error('Failed to load card image:', imgSrc);
-//             $(this).attr('src', 'fallback-image.png');
-//         });
-
-//         $(containerSelector).append(img);
-//     }
-
-//     function hit() {
-//         $.post('/blackjack/hit', function (data) {
-//             console.log('Hit Response:', JSON.stringify(data, null, 2));
-//             updateGame(data);
-//         }).fail(function () {
-//             console.error('Failed to hit.');
-//         });
-//     }
-
-//     function stand() {
-//         $.post('/blackjack/stand', function (data) {
-//             console.log('Stand Response:', JSON.stringify(data, null, 2));
-//             updateGame(data);
-//         }).fail(function () {
-//             console.error('Failed to stand.');
-//         });
-//     }
-
-//     // Event listeners
-//     newGameButton.click(function (e) {
-//         e.preventDefault();
-//         startNewGame();
-//     });
-//     hitButton.click(hit);
-//     standButton.click(stand);
-
-//     // Start a new game when the page loads
-//     startNewGame();
-// });
-
+// Ensure the DOM is fully loaded before attaching event handlers
 $(document).ready(function() {
-    $('#hitButton').click(function() {
-        $.post('/blackjack/hit', function(data) {
-            updateGame(data);
-        });
-    });
     
-    $('#standButton').click(function() {
-        $.post('/blackjack/stand', function(data) {
+    // Handle the "Hit" button click event
+    $('#hitButton').click(function() {
+        // Send a POST request to the server's /blackjack/hit route
+        $.post('/blackjack/hit', function(data) {
+            // Update the game state based on the server's response
             updateGame(data);
         });
     });
 
+    // Handle the "Stand" button click event
+    $('#standButton').click(function() {
+        // Send a POST request to the server's /blackjack/stand route
+        $.post('/blackjack/stand', function(data) {
+            // Update the game state based on the server's response
+            updateGame(data);
+        });
+    });
+
+    // Handle the "New Game" button click event
     $('#newGameButton').click(function() {
+        // Send a GET request to the server's /blackjack/start route to start a new game
         $.get('/blackjack/start', function() {
+            // Reload the page to reset the game state
             location.reload();
         });
     });
 
+    // Initially hide the game-over message element
     $('.game-over').hide();
 
+    // Function to update the game state based on the data received from the server
     function updateGame(gameData) {
+        // Update the player's score display
         $('#playerScore').text(gameData.playerScore);
-        $('#dealerScore').text(gameData.dealerScore);
         
+        // Update the dealer's score display
+        $('#dealerScore').text(gameData.dealerScore);
+
+        // Clear and update the player's hand with the received cards
         $('#playerHand').empty();
         gameData.playerHand.forEach(card => {
             $('#playerHand').append(`<img src="${card.image}" alt="${card.value} of ${card.suit}">`);
         });
+
+        // Clear and update the dealer's hand with cards
         $('#dealerHand').empty();
         gameData.dealerHand.forEach((card, index) => {
-            const imgSrc = gameData.gameOver || index === 0 ? card.image : 'https://deckofcardsapi.com/static/img/back.png';
+            // Show the first card or the full hand if the game is over, otherwise hide other cards
+            const imgSrc = gameData.gameOver || index === 0 
+                ? card.image 
+                : 'https://deckofcardsapi.com/static/img/back.png';
             $('#dealerHand').append(`<img src="${imgSrc}" alt="${card.value} of ${card.suit}">`);
         });
+
+        // Display any message received from the server (e.g., "Player wins!")
         $('#message').text(gameData.message);
-        if(gameData.gameOver) {
+
+        // Check if the game is over
+        if (gameData.gameOver) {
+            // Disable the "Hit" and "Stand" buttons if the game is over
             $('#hitButton, #standButton').prop('disabled', true);
-            $('.game-over').show(); 
+            // Show the game-over message
+            $('.game-over').show();
         } else {
+            // Hide the game-over message if the game is still ongoing
             $('.game-over').hide();
         }
     }
