@@ -74,49 +74,6 @@ main{
     left: 30%;
     transform: translate(-50%, -50%);
 }
-p{
-    padding:20px;
-}
-.leftContent, .rightContent{
-    background-color: var(--dun);
-    width:25vw;
-    border-radius: 15px;
-    min-height:fit-content;
-    height:60vh;
-    text-align: center;
-    color:var(--jet);
-    font-family: bjFont;
-    padding-bottom: 15px;
-}
-.leftContent h1, .rightContent h1{
-    font-size:50px;
-    font-family: casino;
-}
-.leftContent a, .rightContent a{
-    display: inline-block;
-    color:var(--pearl);
-    text-decoration: none;
-    font-size:30px;
-    width:80%;
-    background-color: var(--redwood);
-    border-radius: 10px;
-    height:5vh;
-    text-align: center;
-} */
-/* footer styling */
-footer{
-    position: relative;
-    width: 100%;
-    background: var(--redwood);
-    min-height: 40px;
-    padding: 20px 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    position: fixed;
-    bottom: 0;
-}
 /* cards */
 .thecard{
     margin:0 5rem;
