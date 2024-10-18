@@ -136,16 +136,21 @@ $(document).ready(function() {
             updateGame(data);
         });
     });
+    
     $('#standButton').click(function() {
         $.post('/blackjack/stand', function(data) {
             updateGame(data);
         });
     });
+
     $('#newGameButton').click(function() {
         $.get('/blackjack/start', function() {
             location.reload();
         });
     });
+
+    $('.game-over').hide();
+
     function updateGame(gameData) {
         $('#playerScore').text(gameData.playerScore);
         $('#dealerScore').text(gameData.dealerScore);
@@ -164,8 +169,7 @@ $(document).ready(function() {
             $('#hitButton, #standButton').prop('disabled', true);
             $('.game-over').show(); 
         } else {
-            $('.game-over').hide(); 
-            gameOverScreen.hide();
+            $('.game-over').hide();
         }
     }
 });
