@@ -52,181 +52,123 @@ header{
     color:var(--redwood)
 }
 
-.title-image {
-    position: absolute;
-    bottom:0;
-    width: 300px;
-}
-/* main content styling */
-.titles{
+/* Main container */
+main {
     display: flex;
-    justify-content: space-evenly;
-}
-main{
-    display: flex;
-    justify-content: space-evenly;
-    margin: 3rem auto 0 auto;
-    position: absolute;
-    width: 250px;
-    height: 60vh;
-    background: none;
-    top: 50%;
-    left: 30%;
-    transform: translate(-50%, -50%);
-}
-/* cards */
-.thecard{
-    margin:0 5rem;
-    position: relative;
-    top: 10%;
-    left: -120%;
-    width: 100vw;
-    height: 60vh;
-    border-radius: 40px;
-    transform-style: preserve-3d;
-    transition: all 0.8s ease;
-    display: flex;
-    justify-content: space-evenly;
-}
-.thecard:hover{
-    transform: rotateY(180deg);
-}
-.thefront{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20vw;
-    height: 60vh;
-    border-radius: 30px;
-    backface-visibility: hidden;
-    overflow: hidden;
-    background: var(--dun);
-    color: var(--jet);
-    display: flex;
-}
-.thefront img{
-    width: 20vw;
-    height: 60vh;
-}
-.theback{
-    width: 20vw;
-    height: 60vh;
-    border-radius: 30px;
-    backface-visibility: hidden;
-    overflow: hidden;
-    background: var(--dun);
-    color: var(--jet);
-    text-align: center;
-    transform: rotateY(180deg);
-    display: flex;
-}
-.thefront p, .theback p{
-    font-family: 'bjfont';
-    padding: 30px;
-    font-size: 17px;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-    align-content: stretch;
-}
-.war-a{
-    font-family: 'bjfont';
-    text-decoration: none;
-    background-color: #fff;
-    color: #333;
-    padding: 3%;
-    border-radius: 20px;
-    font-weight: 400px;
-    position: absolute;
-    bottom: 10%;
-    left: 33%;
-    width: 7vw;
-    height: 5vh;
-}
-.bj-a{
-    font-family: 'bjfont';
-    text-decoration: none;
-    background-color: #fff;
-    color: #333;
-    padding: 3%;
-    border-radius: 20px;
-    font-weight: 400px;
-    position: absolute;
-    bottom: 10%;
-    left: 25%;
-    width: 10vw;
-    height: 5vh;
-}
-.thecard2{
-    position: relative;
-    top: 10%;
-    right: 120%;
-    width: 100vw;
-    height: 60vh;
-    border-radius: 40px;
-    transform-style: preserve-3d;
-    transition: all 0.8s ease;
-    display: flex;
-    justify-content: space-evenly;
-}
-.thecard2:hover{
-    transform: rotateY(180deg);
-}
-.thefront2{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20vw;
-    height: 60vh;
-    border-radius: 30px;
-    backface-visibility: hidden;
-    overflow: hidden;
-    background: var(--dun);
-    color: var(--jet);
-    display: flex;
-}
-.thefront2 img{
-    width: 20vw;
-    height: 60vh;
-}
-.theback2{
-    width: 20vw;
-    height: 60vh;
-    border-radius: 30px;
-    backface-visibility: hidden;
-    overflow: hidden;
-    background: var(--dun);
-    color: var(--jet);
-    text-align: center;
-    transform: rotateY(180deg);
-    display: flex;
-}
-.thefront2 p, .theback2 p{
-    font-family: 'bjfont';
-    padding: 30px;
-    font-size: 17px;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-    align-content: stretch;
-}
-a:visited{
-    color: #333;
-}
-.war-title{
-    margin-top: -15%;
-    font-family: 'casino';
-    color: var(--jet);
-    font-size: 400%;
-    justify-content: space-evenly;
-}
-.bj-title{
-    margin-top: -15%;
-    font-family: 'casino';
-    color: var(--jet);
-    font-size: 400%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 4rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, --pearl 0%, --dun 100%);
 }
 
-/* media styling */
-@media only screen and (max-width: 1350px) {
+/* Game titles */
+.war-title, .bj-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: var(--jet);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    margin-bottom: 1rem;
+    font-family: 'Arial Black', sans-serif;
+}
+
+/* Card containers */
+.thecard, .thecard2 {
+    width: 320px;
+    height: 450px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+    cursor: pointer;
+}
+
+.thecard:hover, .thecard2:hover {
+    transform: rotateY(180deg);
+}
+
+/* Card faces */
+.thefront, .thefront2, .theback, .theback2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Front of cards */
+.thefront, .thefront2 {
+    background-image: url("./assets/image-removebg-preview\ \(3\).png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+/* Back of cards */
+.theback, .theback2 {
+    background: linear-gradient(45deg, #e31837 0%, #ff2b4c 100%);
+    transform: rotateY(180deg);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.theback p, .theback2 p {
+    color: #ffffff;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Play buttons */
+.war-a, .bj-a {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: #ffffff;
+    color: #e31837;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.war-a:hover, .bj-a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: #f8f8f8;
+}
+
+/* Responsive design */
+@media (min-width: 768px) {
+    main {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .war-title, .bj-title {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 767px) {
+    .war-title, .bj-title {
+        font-size: 2.5rem;
+    }
+
+    .thecard, .thecard2 {
+        width: 280px;
+        height: 400px;
+    }
 }
