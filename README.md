@@ -2,6 +2,10 @@
 
 Welcome to the Card Games Web Application! This application features two classic card games: **War** and **Blackjack**. You can enjoy playing these games directly in your browser.
 
+## 📸 Preview
+
+![Cards API Screenshot](/assets/cards.png)  
+
 ## Table of Contents
 
 - [Getting Started](#getting-started)
