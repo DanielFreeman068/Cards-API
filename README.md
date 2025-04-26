@@ -4,7 +4,7 @@ Welcome to the Card Games Web Application! This application features two classic
 
 ## 📸 Preview
 
-![Cards API Screenshot](/assets/cards.png)  
+![Cards API Screenshot](/public/assets/cards.png)  
 
 ## Table of Contents
 
