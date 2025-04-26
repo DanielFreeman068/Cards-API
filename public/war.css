@@ -1,360 +1,178 @@
-/* General body styles */
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(90deg, rgb(228, 32, 32), rgb(255, 149, 0), rgb(255, 123, 0)); /* Gradient background */
+/* CSS Variables */
+:root {
+    --deep-black: #000000;
+    --dark-gray: #1a1a1a;
+    --medium-gray: #333333;
+    --light-gray: #666666;
+    --off-white: #f0f0f0;
+    --accent-red: #8b0000;
+}
+
+/* General Styles */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    height: 100vh;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    font-family: Casino;
-
 }
 
-@font-face {
-    font-family: Casino;
-    src: url(./fonts/Casino.ttf);
-}
-
-.game-container {
-    position: relative; /* Added to establish positioning context */
-    text-align: center;
-    width: 100%;
-    visibility: hidden;
-    background-image: url('/public/assets/warbg.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--deep-black);
+    background-image: 
+        linear-gradient(45deg, var(--dark-gray) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--dark-gray) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--dark-gray) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--dark-gray) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    margin: 0;
+    padding: 20px;
     min-height: 100vh;
-    z-index: 1; /* Base z-index */
-}
-
-/* Side Labels */
-.side-label {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 120px;
-    font-weight: bold;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
-    z-index: 4; /* Ensure labels are above other elements */
-}
-
-.left-label {
-    left: 10px;
-    color: rgb(161, 247, 255);
-    animation: glow-blue 1.5s infinite alternate;
-}
-
-.right-label {
-    right: 10px;
-    color: rgb(255, 131, 131);
-    animation: glow-red 1.5s infinite alternate;
-}
-
-/* Vertical Text */
-.side-label span {
-    display: inline-block;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-}
-
-/* Glowing Effect for Player */
-@keyframes glow-blue {
-    from {
-        text-shadow: 0 0 5px blue, 0 0 10px blue, 0 0 15px blue;
-    }
-    to {
-        text-shadow: 0 0 20px blue, 0 0 30px blue, 0 0 40px blue;
-    }
-}
-
-/* Glowing Effect for CPU */
-@keyframes glow-red {
-    from {
-        text-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red;
-    }
-    to {
-        text-shadow: 0 0 20px red, 0 0 30px red, 0 0 40px red;
-    }
-}
-.top-section {
-    margin-top: 20px;
-}
-
-/* Style for the "War" text */
-.top-section h1 {
-    margin: 10px 0;
-    font-size: 80px; /* Increase the font size */
-    font-weight: bold; /* Make the text bold */
-    color: orange; /* Fallback color for older browsers */
-    background: linear-gradient(90deg, orange, yellow, orange); /* Gradient background */
-    background-size: 200% 100%; /* Double the background width for animation */
-    background-clip: text;
-    -webkit-background-clip: text; /* For Safari */
-    color: transparent; /* Make text transparent to show background */
-    animation: gradientAnimation 5s linear infinite; /* Apply the animation */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Add a subtle shadow for better readability */
-}
-
-/* Keyframes for the gradient animation */
-@keyframes gradientAnimation {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 100% 50%;
-    }
-}
-
-.top-section h2 {
-    margin: 10px 0;
-    color: #ffffff;
-    font-size: 30px;
-    -webkit-text-stroke-width: 0.5px;
-    -webkit-text-stroke-color: black;
-}
-
-.deck-counter {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 120px;
-    height: 120px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 5px solid #ffd700;
-    border-radius: 50%;
+    color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-}
-
-.deck-counter span {
-    font-size: 48px;
-    font-weight: bold;
-    color: #000;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
-}
-
-.card-battle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 60%;
-    margin: 50px auto;
-    position: relative;
-    z-index: 3; 
-}
-
-.card-container {
-    position: relative;
-    display: inline-block;
-    z-index: 3; /* Cards are above the spinning image */
-}
-
-
-.flip-card {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.5s ease-in-out;
-    z-index: 3; /* Ensure flip-card is above spinning image */
-}
-
-/* Initial positions using transform */
-#player-card {
-    transform: translateX(-300%); /* Move offscreen to the left */
-}
-
-#cpu-card {
-    transform: translateX(300%);  /* Move offscreen to the right */
-}
-
-/* Moving cards into view */
-#player-card.player-move {
-    transform: translateX(0);
-}
-
-#cpu-card.cpu-move {
-    transform: translateX(0);
-}
-
-/* Flip Inner for animation */
-.flip-card-inner {
-    width: 226px;
-    height: 314px;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-}
-
-.flip-card.flipped .flip-card-inner {
-    transform: rotateY(180deg); /* Flip the card */
-}
-
-/* Flip Card Faces */
-.flip-card-front, .flip-card-back {
-    position: absolute;
-    width: 226px;
-    height: 314px;
-    backface-visibility: hidden;
-}
-
-.flip-card-back {
-    background: linear-gradient(90deg, orange, yellow, orange); /* Gradient background */
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-}
-
-.flip-card-front {
-    transform: rotateY(180deg);
-}
-
-/* Tilted Cards */
-#player-card.tilted {
-    transform: translateX(0) rotate(-3deg);
-}
-
-#cpu-card.tilted {
-    transform: translateX(0) rotate(3deg);
-}
-
-/* Winner Card */
-#player-card.winner {
-    transform: translateX(0) rotate(-3deg) scale(1.1) translateY(-10px);
-}
-
-#cpu-card.winner {
-    transform: translateX(0) rotate(3deg) scale(1.1) translateY(-10px);
-}
-
-/* Ensure transitions are smooth for the winner card */
-#player-card.winner, #cpu-card.winner {
-    transition: transform 0.5s ease-in-out;
-}
-
-/* Spinning Image Styles */
-.spinning-image {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 500px;  /* Adjust size as needed */
-    height: 500px; /* Adjust size as needed */
-    background-image: url('/public/assets/winner.png'); /* Adjust the path to your image */
-    background-size: contain;
-    background-repeat: no-repeat;
-    pointer-events: none;
-    animation: spin 2s linear infinite;
-    z-index: 2; /* Place above background but below cards */
-}
-
-/* Keyframes for the spin animation */
-@keyframes spin {
-    from {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-/* Bottom section */
-.bottom-section {
-    margin-bottom: 20px;
+    flex-direction: column;
     text-align: center;
+    overflow: hidden;
 }
 
-button {
-    background-color: #3a2815;
+h1, h2, p {
+    color: #f8f8f8;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+/* Title */
+h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Scoreboard and Buttons */
+#player-score, #computer-score {
+    font-size: 1.5rem;
+    margin: 10px;
+}
+
+#draw-btn {
+    font-size: 1.5rem;
+    padding: 20px 40px;
+    background-color: #e31837;
     color: white;
     border: none;
-    padding: 20px 40px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    margin-top: 30px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#draw-btn:hover {
+    background-color: #ff2b4c;
+    transform: scale(1.1);
+}
+
+#draw-btn:active {
+    transform: scale(0.95);
+}
+
+#round-result {
+    font-size: 2rem;
     margin-top: 20px;
+    font-style: italic;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
 }
 
-button:hover {
-    background-color: #a07d45;
+/* Card Animation */
+.card, .war-card {
+    width: 120px;
+    height: 180px;
+    margin: 10px;
+    transition: transform 0.5s ease, opacity 1s ease;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
 }
 
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+/* Flip Card Effect */
+#player-card, #computer-card {
+    display: inline-block;
+    transition: transform 0.8s;
 }
 
-/* Countdown styles */
-#countdown {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    text-align: center;
-}
-
-/* For image countdown */
-#countdown img {
-    width: 200px; /* Adjust size as needed */
-    height: auto;
-}
-
-/* For text countdown */
-#countdown-number {
-    font-size: 100px; /* Adjust as needed */
-    color: #333;
-}
-
-.score-rectangles {
-    position: absolute;
-    top: 90%; /* Adjust this value to move the rectangles higher */
+.card img {
     width: 100%;
-    height: 0;
-    z-index: 3;
-    pointer-events: none;
+    height: 100%;
+    border-radius: 10px;
 }
 
-/* Score Rectangle Base Styles */
-.score-rectangle {
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 3rem;
+    }
+
+    #draw-btn {
+        font-size: 1.2rem;
+        padding: 15px 30px;
+    }
+
+    #player-card, #computer-card {
+        width: 80px;
+        height: 120px;
+    }
+}
+
+#exit-btn {
     position: absolute;
-    width: 300px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    top: 10px;
+    left: 10px;
+    padding: 6px 12px;
+    background-color: #f44336;
     color: white;
-    font-size: 36px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
     font-weight: bold;
-    overflow: hidden;
-    transform: translateY(170%); /* Start off-screen at the bottom */
-    transition: transform 0.5s ease-in-out;
 }
 
-/* Player's Score Rectangle */
-.player-score {
+#exit-btn a {
+    text-decoration: none;
+    color: white;
+}
+
+
+/* end of game screen */
+#reset-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
     left: 0;
-    background-color: rgb(161, 247, 255);
-    clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    background-color: rgba(128, 128, 128, 0.4); /* light gray overlay */
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* CPU's Score Rectangle */
-.cpu-score {
-    right: 0;
-    background-color: rgb(255, 131, 131);
-    clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+#reset-btn {
+    padding: 16px 32px;
+    font-size: 1.5rem;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
 }
 
-/* When the rectangles slide in */
-.score-rectangle.slide-in {
-    transform: translateY(0); /* Slide up into view */
+#reset-btn:hover {
+    background-color: #5cd660;
 }

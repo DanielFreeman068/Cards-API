@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Card Games</title>
-    <link type="text/css" rel="stylesheet" href="/public/styles.css">
+    <link rel="stylesheet" href="/public/styles.css">
 </head>
 <body>
     <header>
@@ -12,14 +12,17 @@
         <h1 class="title">Card Game API</h1>
         <img id="dice" class="headerImg-2" src="/public/assets/image.png" alt="cards">
     </header> 
+
     <main>            
         <div class="game-section">
             <h1 class="war-title">War</h1>
             <div class="thecard">
-                <div class="thefront"></div>
-                <div class="theback">
-                    <p>War is a simple card game for two players using a standard 52-card deck. Each player draws a card, and the higher card wins the round. If the cards are equal, a "war" occurs, where players reveal more cards to determine the winner. The game continues until one player has all the cards or they choose to stop.</p>
-                    <a class="war-a" href="/war/start">Play War</a> 
+                <div class="card-inner">
+                    <div class="thefront"></div>
+                    <div class="theback">
+                        <p>War is a simple card game for two players using a standard 52-card deck. Each player draws a card, and the higher card wins the round. If the cards are equal, a "war" occurs, where players reveal more cards to determine the winner. The game continues until one player has all the cards or they choose to stop.</p>
+                        <a class="war-a" href="/war/start">Play War</a> 
+                    </div>
                 </div>
             </div>
         </div>
@@ -27,14 +30,17 @@
         <div class="game-section">
             <h1 class="bj-title">Blackjack</h1>
             <div class="thecard2">
-                <div class="thefront2"></div>
-                <div class="theback2">
-                    <p>Blackjack is a casino card game where players aim to get a hand value of 21 or closer without exceeding it. Players can "hit" for more cards or "stand" to keep their total, competing against the dealer.</p>
-                    <a class="bj-a" href="/blackjack/start">Play Blackjack</a>
+                <div class="card-inner">
+                    <div class="thefront2"></div>
+                    <div class="theback2">
+                        <p>Blackjack is a casino card game where players aim to get a hand value of 21 or closer without exceeding it. Players can "hit" for more cards or "stand" to keep their total, competing against the dealer.</p>
+                        <a class="bj-a" href="/blackjack/start">Play Blackjack</a>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
